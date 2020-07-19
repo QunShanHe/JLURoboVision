@@ -7,7 +7,6 @@ LIBS += -lgxiapi \
         -lpthread \
         -lX11
 
-
 unix: PKGCONFIG += opencv
 INCLUDEPATH += /usr/local/include \
                /usr/local/include/opencv \
@@ -33,11 +32,12 @@ LIBS += /usr/local/lib/libopencv_calib3d.so \
         /usr/local/lib/libopencv_ml.so
 
 SOURCES += \
+        AngleSolver/AngleSolcer.cpp \
         Armor/ArmorBox.cpp \
         Armor/ArmorDetector.cpp \
         Armor/ArmorNumClassifier.cpp \
-        Armor/LightBar.cpp \
         Armor/findLights.cpp \
+        Armor/LightBar.cpp \
         Armor/matchArmors.cpp \
         GxCamera/GxCamera.cpp \
         main.cpp
@@ -51,7 +51,9 @@ DISTFILES += \
     Armor/Armor.vcxproj.filters
 
 HEADERS += \
-    Armor/Armor.h \ \
-    GxCamera/GxCamera.h \
+    AngleSolver/AngleSolver.h \
+    Armor/Armor.h \
     GxCamera/include/DxImageProc.h \
-    GxCamera/include/GxIAPI.h
+    GxCamera/include/GxIAPI.h \
+    GxCamera/GxCamera.h \
+    General/General.h
