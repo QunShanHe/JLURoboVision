@@ -48,10 +48,10 @@ void* imageUpdatingThread(void* PARAM)
 
     //Attention:   (Width-64)%2=0; (Height-64)%2=0; X%16=0; Y%2=0;
     //   ROI             Width           Height       X       Y
-    camera.setRoiParam(   400,            300,        0,      0);
+    camera.setRoiParam(   400,            300,       160,    256  );
 
     //   ExposureGain          autoExposure  autoGain  ExposureTime  AutoExposureMin  AutoExposureMax  Gain(<=16)  AutoGainMin  AutoGainMax  GrayValue
-    camera.setExposureGainParam(    false,     false,      2000,          1000,              3000,         16,         5,            10,        127);
+    camera.setExposureGainParam(    false,     false,      5000,          1000,              3000,         16,         5,            10,        127);
 
     //   WhiteBalance             Applied?       light source type
     camera.setWhiteBalanceParam(    true,    GX_AWB_LAMP_HOUSE_ADAPTIVE);
