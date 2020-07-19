@@ -1,7 +1,7 @@
 #include"Armor/Armor.h"
 #include"GxCamera/GxCamera.h"
+#include"AngleSolver/AngleSolver.h"
 #include<X11/Xlib.h>
-using namespace cv;
 
 pthread_t thread1;
 pthread_t thread2;
@@ -22,6 +22,9 @@ GxCamera camera;
 
 //import armor detector
 ArmorDetector detector;
+
+//import angle solver
+AngleSolver angleSolver;
 
 int main(int argc, char** argv)
 {
@@ -48,10 +51,10 @@ void* imageUpdatingThread(void* PARAM)
 
     //Attention:   (Width-64)%2=0; (Height-64)%2=0; X%16=0; Y%2=0;
     //   ROI             Width           Height       X       Y
-    camera.setRoiParam(   400,            300,       160,    256  );
+    camera.setRoiParam(   640,            480,        80,     120);
 
     //   ExposureGain          autoExposure  autoGain  ExposureTime  AutoExposureMin  AutoExposureMax  Gain(<=16)  AutoGainMin  AutoGainMax  GrayValue
-    camera.setExposureGainParam(    false,     false,      5000,          1000,              3000,         16,         5,            10,        127);
+    camera.setExposureGainParam(    false,     true,      10000,          1000,              3000,         16,         5,            10,        127);
 
     //   WhiteBalance             Applied?       light source type
     camera.setWhiteBalanceParam(    true,    GX_AWB_LAMP_HOUSE_ADAPTIVE);
@@ -64,8 +67,35 @@ void* armorDetectingThread(void* PARAM)
 {
     char ch;
     int targetNum = 2;
-    detector.loadSVM("/home/mountain/Git/JLURoboVision/123svm.xml");  //for nano
+    detector.loadSVM("/home/mountain/Documents/Robomaster/JLURoboVision/123svm.xml");  //for nano
     detector.setEnemyColor(BLUE); //here set enemy color
+
+
+    //angleSolver.setCameraParam("/home/mountain/Documents/Robomaster/JLURoboVision/camera_params.xml",1);
+    Mat cameraMatrix(3, 3, CV_64FC1);      //Camera Intrinsic Matrix
+    cameraMatrix.at<double>(0, 0) = 2042.18552784945;
+    cameraMatrix.at<double>(0, 1) = 0;
+    cameraMatrix.at<double>(0, 2) = 402.875998724284;
+    cameraMatrix.at<double>(1, 0) = 0;
+    cameraMatrix.at<double>(1, 1) = 1978.85998346700;
+    cameraMatrix.at<double>(1, 2) = 177.309136726488;
+    cameraMatrix.at<double>(2, 0) = 0;
+    cameraMatrix.at<double>(2, 1) = 0;
+    cameraMatrix.at<double>(2, 2) = 1;
+
+    Mat distrionCoeff(1, 4, CV_64FC1);    //Camera Distrion Coeffs
+    distrionCoeff.at<double>(0, 0) = 0.277292580328488;
+    distrionCoeff.at<double>(0, 1) = -3.46003150520478;
+    distrionCoeff.at<double>(0, 2) = -0.0127931599470676;
+    distrionCoeff.at<double>(0, 3) = 0.0151175746264883;
+
+    angleSolver.setCameraParam(cameraMatrix, distrionCoeff); //Directly set cameraMatrix and distrionCoeff
+
+
+    angleSolver.setArmorSize(SMALL_ARMOR,700,800);
+    angleSolver.setArmorSize(BIG_ARMOR,700,800);
+    angleSolver.setBulletSpeed(15000);
+
     usleep(1000000);
 
     double t,t1;
@@ -85,20 +115,32 @@ void* armorDetectingThread(void* PARAM)
         pthread_mutex_unlock(&Globalmutex);
 
 
-        //操作手用，实时设置目标装甲板数字
-        detector.setTargetNum(targetNum);
 
         //装甲板检测识别子核心集成函数
         detector.run(src);
 
+        //cout<<"********************************************Armor FOUND?"<<detector.isFoundArmor()<<endl;
+
         //给角度解算传目标装甲板值的实例
-        vector<Point2f> imagePoints;
-        ArmorType type;
-        detector.getTargetInfo(imagePoints, type);
+        double yaw=0,pitch=0,distance=0;
+        if(detector.isFoundArmor())
+        {
+            vector<Point2f> contourPoints;
+            Point2f centerPoint;
+            ArmorType type;
+            detector.getTargetInfo(contourPoints, centerPoint, type);
+            angleSolver.getAngle(contourPoints,centerPoint,SMALL_ARMOR,yaw,pitch,distance);
+            cout<<"Yaw: "<<yaw<<"Pitch: "<<pitch<<"Distance: "<<distance<<endl;
+        }
+
+        //串口可以在此获取信息 yaw pitch distance，同时设定目标装甲板数字
+        cout<<"Yaw: "<<yaw<<"Pitch: "<<pitch<<"Distance: "<<distance<<endl;
+        //操作手用，实时设置目标装甲板数字
+        detector.setTargetNum(targetNum);
 
         //FPS(fps, 'E', src.clone());
-        t1=(getTickCount()-t)/getTickFrequency();
-        printf("*******************************************************fps:%f\n",1/t1);
+        //t1=(getTickCount()-t)/getTickFrequency();
+        //printf("*******************************************************fps:%f\n",1/t1);
 
         //装甲板检测识别调试参数是否输出
         //param:
