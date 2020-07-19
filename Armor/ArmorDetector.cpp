@@ -2,7 +2,10 @@
 
 ArmorParam armorParam = ArmorParam();
 
-ArmorDetector::ArmorDetector(){}
+ArmorDetector::ArmorDetector()
+{
+    state = LIGHTS_NOT_FOUND;
+}
 
 ArmorDetector::~ArmorDetector(){}
 
@@ -110,14 +113,30 @@ void ArmorDetector::run(Mat & src) {
 /**
  *@brief: get the vertices and type of target Armor for angle solver 将detector的结果输出
  */
-void ArmorDetector::getTargetInfo(vector<Point2f>& armorVertices, ArmorType & type)
+void ArmorDetector::getTargetInfo(vector<Point2f>& armorVertices, Point2f & centerPoint, ArmorType & type)
 {
+    armorVertices.clear();
 	armorVertices = targetArmor.armorVertices;
+    centerPoint = targetArmor.center;
 	type = targetArmor.type;
 }
 
 
-
+/**
+ *@brief: return the Detector status 识别程序是否识别到装甲版
+ *@return: FOUND(1) NOT_FOUND(0)
+ */
+bool ArmorDetector::isFoundArmor()
+{
+    if(state == ARMOR_FOUND)
+    {
+        return 1;
+    }
+    else
+    {
+        return 0;
+    }
+}
 
 
 ///////////////////////////////////////////////////////////  functions  for   debugging      //////////////////////////////////////////////////////////////////

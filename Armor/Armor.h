@@ -4,55 +4,11 @@
 *	@Brief:  This header file declares all the classes and params used to detect/recognize enemy armors
 */
 
-#define DEBUG_LINUX
-//#define DEBUG_WINDOWS
-#define VIDEO
-//#define IMAGE
-
-//#pragma once
 #ifndef ARMOR
 #define ARMOR
 
+#include "General/General.h"
 
-
-#ifdef DEBUG_LINUX
-#include<opencv2/opencv.hpp>
-#endif // DEBUG_LINUX
-
-#ifdef DEBUG_WINDOWS
-#include<opencv2/opencv.hpp>
-#endif // DEBUG_WINDOWS
-
-#include<iostream>
-#include<math.h>
-
-using namespace cv;
-using namespace ml;
-using namespace std;
-
-
-float getPointsDistance(const Point2f& a, const Point2f& b);
-
-
-/**
-* @brief: colors in order B G R 颜色B蓝 G绿 R红
-*/
-enum Color
-{
-	BLUE = 0,
-	GREEN = 1,
-	RED = 2
-};
-
-
-/**
- *@brief: the types of armor BIG SMALL 大装甲板 小装甲板
- */
-enum ArmorType
-{
-	SMALL_ARMOR = 0,
-	BIG_ARMOR = 1
-};
 
 enum DetectorState
 {
@@ -269,6 +225,12 @@ public:
 	 */
     void run(Mat & src);
 
+    /**
+     *@brief: return the Detector status 识别程序是否识别到装甲版
+     *@return: FOUND(1) NOT_FOUND(0)
+     */
+    bool isFoundArmor();
+
 	/**
 	 *@brief: show all the informations of this frame detection  显示所有信息
 	 */
@@ -278,7 +240,7 @@ public:
 	/**
 	 *@brief: get the vertices and type of target Armor for angle solver 将detector的结果输出
 	 */
-	void getTargetInfo(vector<Point2f> &armorVertices, ArmorType &type);
+    void getTargetInfo(vector<Point2f> &armorVertices, Point2f &centerPoint, ArmorType &type);
 
 private:
 	Mat srcImg;  //source image (current frame acquired from camera) 从相机采集的当前的图像帧
