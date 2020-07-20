@@ -85,6 +85,11 @@ public:
 	*/
 	void getAngle(vector<Point2f> & contourPoints, Point2f centerPoint, ArmorType type, double & yaw, double & pitch, double & evaluateDistance);
 
+    /**
+    * @brief show debug information
+    */
+    void showDebugInfo(bool showCurrentResult, bool showTVec, bool showP4P, bool showPinHole, bool showCompensation, bool showCameraParams);
+
 private:
 
 	//Camera params

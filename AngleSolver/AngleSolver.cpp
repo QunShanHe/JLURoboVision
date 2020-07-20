@@ -1,5 +1,13 @@
 #include "AngleSolver.h"
 
+AngleSolver::AngleSolver()
+{
+}
+
+AngleSolver::~AngleSolver()
+{
+}
+
 void AngleSolver::setCameraParam(const cv::Mat & camera_matrix, const cv::Mat & distortion_coeff)
 {
 	camera_matrix.copyTo(CAMERA_MATRIX);
@@ -27,11 +35,11 @@ int AngleSolver::setCameraParam(const char * filePath, int camId)
 		fsRead["DISTORTION_COEFF_1"] >> distortion_coeff;
 		break;
 	case 2:
-		fsRead["CAMERA_MARTRIX_2"] >> camera_matrix;
+        fsRead["CAMERA_MATRIX_2"] >> camera_matrix;
 		fsRead["DISTORTION_COEFF_2"] >> distortion_coeff;
 		break;
 	case 3:
-		fsRead["CAMERA_MARTRIX_3"] >> camera_matrix;
+        fsRead["CAMERA_MATRIX_3"] >> camera_matrix;
 		fsRead["DISTORTION_COEFF_3"] >> distortion_coeff;
 		break;
 	default:
@@ -90,17 +98,8 @@ void AngleSolver::solveAngles()
 	default:
 		break;
 	}
-    cout<<"SMALL_ARMOR_POINTS_3D"<<SMALL_ARMOR_POINTS_3D<<endl;
-    cout<<"targetContour"<<targetContour<<endl;
-    cout<<"Camera Params"<<endl;
-    cout<<CAMERA_MATRIX<<endl;
-    cout<<DISTORTION_COEFF<<endl;
-    cout<<"_rvec"<<_rvec<<endl;
-    cout<<"Tvec"<<tVec<<endl;
-    Rodrigues(_rvec, rVec);
-	
+
 	GUN_CAM_DISTANCE_Y = 0;
-	
 	tVec.at<double>(1, 0) -= GUN_CAM_DISTANCE_Y;
 	double x_pos = tVec.at<double>(0, 0);
 	double y_pos = tVec.at<double>(1, 0);
@@ -109,7 +108,7 @@ void AngleSolver::solveAngles()
 	
 
 	// Target is too far, using PinHole solver
-    if (distance > 3000)
+    if (distance > 5000)
 	{
 		PinHole_solver();
 	}
@@ -118,15 +117,6 @@ void AngleSolver::solveAngles()
 	{
 		P4P_solver();
 	}
-	cout << "tVec:" << endl;
-	cout << " X:" << tVec.at<double>(0, 0);
-	cout << " Y:" << tVec.at<double>(1, 0);
-	cout << " Z:" << tVec.at<double>(2, 0);
-	cout << endl;
-	cout << "-----------------------------------------------" << endl;
-	
-	cout << "Distance:" << distance << endl;
-	cout << "-----------------------------------------------" << endl;
 }
 
 void AngleSolver::P4P_solver()
@@ -166,37 +156,98 @@ void AngleSolver::PinHole_solver()
 
 void AngleSolver::compensateAngle()
 {
-	//compensateOffset();
-	//compensateGravity();
+    compensateOffset();
+    compensateGravity();
 }
 
 void AngleSolver::compensateOffset()
 {
-	float camera_target_height = distance * sin(x_pitch);
-	float gun_target_height = camera_target_height + GUN_CAM_DISTANCE_Y;
-	float gun_pitch_tan = gun_target_height / (distance * cos(x_pitch));
-	x_pitch = atan(gun_pitch_tan);
+    float camera_target_height = distance * sin(x_pitch / 180 * CV_PI);
+    float gun_target_height = camera_target_height + GUN_CAM_DISTANCE_Y;
+    float gun_pitch_tan = gun_target_height / (distance * cos(x_pitch / 180 * CV_PI));
+    x_pitch = atan(gun_pitch_tan) / CV_PI * 180;
 }
 
 void AngleSolver::compensateGravity()
 {
-	float compensateGravity_pitch_tan = tan(x_pitch) + (0.5*9.8*(distance / BULLET_SPEED)*(distance / BULLET_SPEED)) / cos(x_pitch);
-	x_pitch = atan(compensateGravity_pitch_tan);
+    float compensateGravity_pitch_tan = tan(x_pitch/180*CV_PI) + (0.5*9.8*(distance / BULLET_SPEED)*(distance / BULLET_SPEED)) / cos(x_pitch/180*CV_PI);
+    x_pitch = atan(compensateGravity_pitch_tan)/CV_PI*180;
 }
 
 void AngleSolver::getAngle(vector<Point2f>& contourPoints,Point2f cenerPoint, ArmorType type, double & yaw, double & pitch, double & evaluateDistance)
 {
 	setTarget(contourPoints, cenerPoint, type);
 	solveAngles();
+    compensateAngle();
 	yaw = y_yaw;
 	pitch = x_pitch;
 	evaluateDistance = distance;
 }
 
-AngleSolver::AngleSolver()
+void AngleSolver::showDebugInfo(bool showCurrentResult, bool showTVec, bool showP4P, bool showPinHole, bool showCompensation, bool showCameraParams)
 {
-}
+    if(showCurrentResult)
+    {
+        cout<<"Yaw: " << y_yaw << "Pitch: " << x_pitch << "Distance: " << distance<<endl;
+        cout << "-----------------------------------------------" << endl;
+    }
+    if(showTVec)
+    {
+        cout << "tVec:" << endl;
+        cout << " X:" << tVec.at<double>(0, 0);
+        cout << " Y:" << tVec.at<double>(1, 0);
+        cout << " Z:" << tVec.at<double>(2, 0);
+        cout << endl;
+        cout << "-----------------------------------------------" << endl;
+    }
+    float yaw_temp = y_yaw, pitch_temp = x_pitch;
+    if(showP4P)
+    {
+        P4P_solver();
+        cout<<"P4P Solver:"<<endl;
+        cout<<"Yaw: " << y_yaw << "Pitch: " << x_pitch <<endl;
+        cout << "-----------------------------------------------" << endl;
+        y_yaw = yaw_temp; x_pitch = pitch_temp;
+    }
+    if(showPinHole)
+    {
+        PinHole_solver();
+        cout<<"PinHole Solver:"<<endl;
+        cout<<"Yaw: " << y_yaw << "Pitch: " << x_pitch <<endl;
+        cout << "-----------------------------------------------" << endl;
+        y_yaw = yaw_temp; x_pitch = pitch_temp;
+    }
+    if(showCompensation)
+    {
+        solveAngles();
+        float raw_pitch;
+        raw_pitch = x_pitch;
+        compensateOffset();
+        cout<<"Gun-Camera Offset:"<<x_pitch - raw_pitch<<endl;
+        cout<<"Yaw: " << y_yaw << "Pitch: " << x_pitch <<endl;
+        cout << "-----------------------------------------------" << endl;
 
-AngleSolver::~AngleSolver()
-{
+        solveAngles();
+        compensateGravity();
+        cout<<"Gravity:"<<x_pitch - raw_pitch<<endl;
+        cout<<"Yaw: " << y_yaw << "Pitch: " << x_pitch <<endl;
+        cout << "-----------------------------------------------" << endl;
+
+        solveAngles();
+        compensateAngle();
+        cout<<"Compensation:"<<endl;
+        cout<<"Pitch Compensation:"<<x_pitch - raw_pitch<<endl;
+        cout<<"Yaw: " << y_yaw << "Pitch: " << x_pitch <<endl;
+        cout << "-----------------------------------------------" << endl;
+        y_yaw = yaw_temp; x_pitch = pitch_temp;
+    }
+    if(showCameraParams)
+    {
+        cout<<"CANERA_MATRIX:"<<endl;
+        cout<<CAMERA_MATRIX<<endl;
+        cout << "-----------------------------------------------" << endl;
+        cout<<"DISTORTION_COEFF"<<endl;
+        cout<<DISTORTION_COEFF<<endl;
+        cout << "-----------------------------------------------" << endl;
+    }
 }
