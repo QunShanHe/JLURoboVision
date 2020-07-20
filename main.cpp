@@ -74,11 +74,13 @@ void* armorDetectingThread(void* PARAM)
     int targetNum = 2;
 
     //Set armor detector prop
-    detector.loadSVM("/home/mountain/Git/JLURoboVision/123svm.xml");  //for nano
+    //detector.loadSVM("/home/mountain/Git/JLURoboVision/123svm.xml");
+    detector.loadSVM("/home/robo-jlu/Git/JLURoboVision/123svm.xml");
     detector.setEnemyColor(BLUE); //here set enemy color
 
     //Set angle solver prop
-    angleSolver.setCameraParam("/home/mountain/Git/JLURoboVision/camera_params.xml", 1);
+    //angleSolver.setCameraParam("/home/mountain/Git/JLURoboVision/camera_params.xml", 1);
+    angleSolver.setCameraParam("/home/robo-jlu/Git/JLURoboVision/camera_params.xml", 1);
     //angleSolver.setArmorSize(SMALL_ARMOR,700,800);
     //angleSolver.setArmorSize(BIG_ARMOR,700,800);
     angleSolver.setArmorSize(SMALL_ARMOR,43,40);
