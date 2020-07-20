@@ -32,7 +32,7 @@ LIBS += /usr/local/lib/libopencv_calib3d.so \
         /usr/local/lib/libopencv_ml.so
 
 SOURCES += \
-        AngleSolver/AngleSolcer.cpp \
+        AngleSolver/AngleSolver.cpp \
         Armor/ArmorBox.cpp \
         Armor/ArmorDetector.cpp \
         Armor/ArmorNumClassifier.cpp \
@@ -46,9 +46,11 @@ SUBDIRS += \
     Armor/ARMOR.pro
 
 DISTFILES += \
+    123svm.xml \
     Armor/Armor.sln \
     Armor/Armor.vcxproj \
-    Armor/Armor.vcxproj.filters
+    Armor/Armor.vcxproj.filters \
+    camera_params.xml
 
 HEADERS += \
     AngleSolver/AngleSolver.h \
