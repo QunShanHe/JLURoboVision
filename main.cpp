@@ -1,4 +1,5 @@
 #include"Armor/Armor.h"
+#include"Serial/Serial.h"
 #include"GxCamera/GxCamera.h"
 #include"AngleSolver/AngleSolver.h"
 #include<X11/Xlib.h>
@@ -122,7 +123,7 @@ void* armorDetectingThread(void* PARAM)
         }
 
         //串口在此获取信息 yaw pitch distance，同时设定目标装甲板数字
-        //cout<<"Yaw: "<<yaw<<"Pitch: "<<pitch<<"Distance: "<<distance<<endl;
+        Serial(yaw,pitch,true,detector.isFoundArmor());
         //操作手用，实时设置目标装甲板数字
         detector.setTargetNum(targetNum);
 
@@ -130,7 +131,7 @@ void* armorDetectingThread(void* PARAM)
         //********************** DEGUG **********************//
         //FPS
         t1=(getTickCount()-t)/getTickFrequency();
-        printf("***********************FPS:%f\n",1/t1);
+        //printf("***********************FPS:%f\n",1/t1);
 
         //装甲板检测识别调试参数是否输出
         //param:
@@ -155,7 +156,7 @@ void* armorDetectingThread(void* PARAM)
             //		5.bool showCompensation,  是否输出补偿结果
             //		6.bool showCameraParams	  是否输出相机参数
             //					      1  2  3  4  5  6
-            angleSolver.showDebugInfo(1, 1, 1, 1, 1, 0);
+            angleSolver.showDebugInfo(0, 0, 0, 0, 0, 0);
         }
 
         ch = waitKey(1);
