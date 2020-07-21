@@ -1,9 +1,9 @@
-# JLURoboVision
+# 吉林大学TARS-GO战队视觉代码JLURoboVision
 
-#### 介绍
+## 介绍
 吉林大学TARS-GO战队2020年Robomaster视觉算法JLURoboVision
 
-# 目录
+## 目录
 1. 功能介绍
 2. 效果展示
 3. 依赖环境
