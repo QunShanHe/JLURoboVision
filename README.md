@@ -37,11 +37,12 @@
 |相机|大恒相机MER-050|分辨率640*480 帧率400+fps|
 |镜头|M0814-MP2|焦距8mm 光圈值4|
 ### 软件设备
-|软件|描述|
+|软件类型|型号|
 |---|---|
-|操作系统|Ubuntu 16.04/Ubuntu18.04|
-|IDE|qtcreator|
+|OS|Ubuntu 16.04/Ubuntu18.04|
+|IDE|Qt Creator|
 |Library|OpenCV-3.4.0|
+|DRIVE|Galaxy SDK|
 
 ---
 ## 4.整体框架
