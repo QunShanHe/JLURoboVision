@@ -536,8 +536,8 @@ void *ProcGetImage(void* pAcquisitionThread)
             }
 
             //输出采集到的图像信息
-            printf("<Successful acquisition: FrameCount: %u Width: %d Height: %d FrameID: %llu>\n",
-                    ui32FrameCount++, pFrameBuffer->nWidth, pFrameBuffer->nHeight, pFrameBuffer->nFrameID);
+            //printf("<Successful acquisition: FrameCount: %u Width: %d Height: %d FrameID: %llu>\n",
+            //        ui32FrameCount++, pFrameBuffer->nWidth, pFrameBuffer->nHeight, pFrameBuffer->nFrameID);
 
             emStatus = GXQBuf(threadParam->m_hDevice, pFrameBuffer);
             if(emStatus != GX_STATUS_SUCCESS)
