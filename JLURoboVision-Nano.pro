@@ -20,7 +20,8 @@ SOURCES += \
         Armor/LightBar.cpp \
         Armor/matchArmors.cpp \
         GxCamera/GxCamera.cpp \
-        main.cpp
+        main.cpp \
+    Serial/Serial.cpp
 
 SUBDIRS += \
     Armor/ARMOR.pro
@@ -38,4 +39,5 @@ HEADERS += \
     GxCamera/include/DxImageProc.h \
     GxCamera/include/GxIAPI.h \
     GxCamera/GxCamera.h \
-    General/General.h
+    General/General.h \
+    Serial/Serial.h
