@@ -93,8 +93,20 @@
 ---
 ### 大风车识别
 
-### 角度解算
-
+### 角度解算  
+角度解算部分使用了两种模型解算枪管直指向目标装甲板所需旋转的yaw和pitch角。  
+第一个是P4P解算，第二个是PinHole解算。  
+首先回顾一下相机成像原理，其成像原理公式如下：  
+$ s \begin{bmatrix} u \\ v \\ 1 \end{bmatrix} = \begin{bmatrix} f_x & 0 & c_x \\ 0 & f_y & c_y \\ 0 & 0 & 1 \end{bmatrix} \begin{bmatrix} r_{11} & r_{12} & r_{13} & t_1 \\ r_{21} & r_{22} & r_{23} & t_2 \\ r_{31} & r_{32} & r_{33} & t_3 \end{bmatrix} \begin{bmatrix} X \\ Y \\ Z \\ 1 \end{bmatrix}$
+其中：  
+物体成像平面坐标：  
+$ \begin{bmatrix} u \\ v \\ 1 \end{bmatrix} $  
+相机内参矩阵：  
+\begin{bmatrix} f_x & 0 & c_x \\ 0 & f_y & c_y \\ 0 & 0 & 1 \end{bmatrix}  
+旋转向量和平移向量：  
+\begin{bmatrix} r_{11} & r_{12} & r_{13} & t_1 \\ r_{21} & r_{22} & r_{23} & t_2 \\ r_{31} & r_{32} & r_{33} & t_3 \end{bmatrix}  
+物体世界坐标：  
+\begin{bmatrix} X \\ Y \\ Z \\ 1 \end{bmatrix}
 
 ---
 ## 6.通讯协议
