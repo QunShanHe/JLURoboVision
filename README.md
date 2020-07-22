@@ -27,11 +27,11 @@
 ### 装甲板识别
 装甲板识别采用基于OpenCV的传统算法实现装甲板位置检测，同时采用SVM实现装甲板数字识别。  
 考虑战场实际情况，机器人可打击有效范围在1m~7m之间，在此范围内，本套算法**装甲板识别率达98%**，识别得到装甲板在图像中四个顶点、中心点的坐标信息。  
-![图2.1 装甲板实时识别]( "title") 
+<div align=center>![图2.1 装甲板实时识别](url "装甲板实时识别效果")</div>   
 在640*480图像分辨率下，**装甲板识别帧率可达340fps左右，引入ROI之后可达420fps**。但考虑到识别帧率对于电控机械延迟的饱和，取消引入ROI操作，以此避免引入ROI之后无法及时探测全局视野情况的问题，加快机器人自瞄响应。  
-【图片】  
+<div align=center>![图2.2 装甲板实时识别帧率](url "装甲板实时识别帧率")</div>  
 装甲板数字识别采用SVM，通过装甲板位置信息裁剪二值化后的装甲板图像并透射变换，投入训练好的SVM模型中识别，**数字识别准确率可达98%**。  
-【图片】  
+<div align=center>![图2.3 装甲板数字识别](url "装甲板数字识别")</div>  
 ### 大风车能量机关识别
 【图片】  
 ### 角度解算  
@@ -97,16 +97,22 @@
 角度解算部分使用了两种模型解算枪管直指向目标装甲板所需旋转的yaw和pitch角。  
 第一个是P4P解算，第二个是PinHole解算。  
 首先回顾一下相机成像原理，其成像原理公式如下：  
-$ s \begin{bmatrix} u \\ v \\ 1 \end{bmatrix} = \begin{bmatrix} f_x & 0 & c_x \\ 0 & f_y & c_y \\ 0 & 0 & 1 \end{bmatrix} \begin{bmatrix} r_{11} & r_{12} & r_{13} & t_1 \\ r_{21} & r_{22} & r_{23} & t_2 \\ r_{31} & r_{32} & r_{33} & t_3 \end{bmatrix} \begin{bmatrix} X \\ Y \\ Z \\ 1 \end{bmatrix}$
-其中：  
-物体成像平面坐标：  
-$ \begin{bmatrix} u \\ v \\ 1 \end{bmatrix} $  
-相机内参矩阵：  
-\begin{bmatrix} f_x & 0 & c_x \\ 0 & f_y & c_y \\ 0 & 0 & 1 \end{bmatrix}  
-旋转向量和平移向量：  
-\begin{bmatrix} r_{11} & r_{12} & r_{13} & t_1 \\ r_{21} & r_{22} & r_{23} & t_2 \\ r_{31} & r_{32} & r_{33} & t_3 \end{bmatrix}  
-物体世界坐标：  
-\begin{bmatrix} X \\ Y \\ Z \\ 1 \end{bmatrix}
+$$ s \begin{bmatrix} u \\ v \\ 1 \end{bmatrix} = \begin{bmatrix} f_x & 0 & c_x \\ 0 & f_y & c_y \\ 0 & 0 & 1 \end{bmatrix} \begin{bmatrix} r_{11} & r_{12} & r_{13} & t_x \\ r_{21} & r_{22} & r_{23} & t_y \\ r_{31} & r_{32} & r_{33} & t_z \end{bmatrix} \begin{bmatrix} X \\ Y \\ Z \\ 1 \end{bmatrix}$$
+
+#### P4P解算原理  
+由上述相机成像原理可得相机-物点的平移矩阵为：
+$$ tVec = \begin{bmatrix} t_x \\ t_y \\ t_z \end{bmatrix} $$  
+转角计算公式如下：  
+$$ \tan pitch = \frac{t_y}{\sqrt{{t_y}^2 + {t_z}^2}} $$ 
+$$ \tan yaw = \frac{t_x}{t_z} $$
+
+#### 小孔成像原理
+像素点与物理世界坐标系的关系：  
+$$ x_{screen} = f_x(\frac{X}{Z}) + c_x $$
+$$ y_{screen} = f_y(\frac{Y}{Z}) + c_y $$  
+则转角计算公式如下：  
+$$ \tan pitch = \frac{X}{Z} = \frac{x_{screen} - c_x}{f_x} $$
+$$ \tan yaw = \frac{Y}{Z} = \frac{y_{screen} - c_y}{f_y} $$
 
 ---
 ## 6.通讯协议
