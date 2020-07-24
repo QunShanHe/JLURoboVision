@@ -59,7 +59,7 @@
 ## 4.整体框架
 ### 整体算法流程图  
 ![图4.1 自瞄算法流程图]("https://gitee.com/mountain123/JLURoboVision/blob/master/Assets/Armor.png" "自瞄流程图")  
-![图4.1 自瞄算法流程图](https://gitee.com/mountain123/JLURoboVision/blob/master/Assets/Armor.png "自瞄流程图")
+![图4.1 自瞄算法流程图](https://gitee.com/mountain123/JLURoboVision/raw/master/Assets/Armor.png "自瞄流程图")
 ### 文件树  
 
 ---
