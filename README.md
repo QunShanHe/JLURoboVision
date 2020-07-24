@@ -133,11 +133,11 @@ void eraseErrorRepeatArmor(vector<ArmorBox> & armors)
 		}
 }
 ```
-4. **装甲板数字识别**
+4. **装甲板数字识别**  
 匹配好装甲板后，利用装甲板的顶点在原图的二值图（原图的灰度二值图）中剪切装甲板图，  
 使用透射变换将装甲板图变换为SVM模型所需的Size，随后投入SVM识别装甲板数字。  
 ![图5.3 装甲板数字识别图](https://gitee.com/mountain123/JLURoboVision/raw/master/Assets/NumClassifier.png "装甲板数字识别效果图")
-5. **目标装甲板选取**
+5. **目标装甲板选取**  
 对上述各项装甲板信息（顶点中心点坐标与枪口锚点距离、面积大小、装甲板数字及其是否与操作手设定匹配）进行加权求和，  
 从而获取最佳打击装甲板作为最终的目标装甲板。  
 ![图5.4 装甲板识别效果图](https://gitee.com/mountain123/JLURoboVision/raw/master/Assets/Armor_Monitor.png "装甲板识别效果图")  
