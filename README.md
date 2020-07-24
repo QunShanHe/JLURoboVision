@@ -10,7 +10,7 @@
 * [3. 依赖环境](#3依赖环境)
 * [4. 整体框架](#4整体框架)
 * [5. 实现方案](#5实现方案)
-* [6. 通讯协议](#6通信协议)
+* [6. 通讯协议](#6通讯协议)
 * [7. 配置与调试](#7配置与调试)
 * [8. 总结展望](#8总结展望)
 ---
@@ -96,6 +96,7 @@
 ---
 ### 大风车识别
 
+---
 ### 角度解算  
 角度解算部分使用了两种模型解算枪管直指向目标装甲板所需旋转的yaw和pitch角。  
 第一个是P4P解算，第二个是PinHole解算。  
@@ -122,6 +123,21 @@ $$ \tan yaw = \frac{Y}{Z} = \frac{y_{screen} - c_y}{f_y} $$
 
 ---
 ## 7.配置与调试
+### 运行平台搭建  
+1. Qt（及QtCreator）安装
+2. OpenCV库安装及配置
+3. 大恒相机驱动安装及配置
+
+### 代码调试
+1. 使用QtCreator打开JLURoboVision.pro
+2. 检查camera_params.xml 及123svm.xml路径
+3. 编译运行
+
+### 单独模块调试  
+可参考下列示例代码：  
+[JLUVision_Demos](https://gitee.com/mountain123/JLUVision_Demos)各示例程序代码库  
+[Armor_Demo](https://gitee.com/mountain123/JLUVision_Demos/tree/master/Armor_Demo)为装甲板识别模块演示程序，可在Linux(.pro)/Windows(.sln)运行。  
+[AngleSolver_Armor_GxCamera](https://gitee.com/mountain123/JLUVision_Demos/tree/master/Anglesolver_Armor_GxCamera_Demo)为大恒相机采图+装甲板+角度解算演示程序，需要连接大恒相机在Linux下运行。  
 
 ---
 ## 8.总结展望
