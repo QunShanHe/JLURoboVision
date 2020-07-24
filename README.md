@@ -59,7 +59,6 @@
 ## 4.整体框架
 ### 整体算法流程图  
 ![图4.1 自瞄算法流程图]("https://gitee.com/mountain123/JLURoboVision/blob/master/Assets/Armor.png" "自瞄流程图")  
-![图4.1 自瞄算法流程图](https://gitee.com/mountain123/JLURoboVision/raw/master/Assets/Armor.png "自瞄流程图")
 ### 文件树  
 
 ---
@@ -72,13 +71,13 @@
 然而，前两种方法由于需要遍历所有像素点，耗时较长，因此我们选择了**通道相减法**进行颜色提取。  
 其原理是在**低曝光**（3000~5000）情况下，蓝色灯条区域的B通道值要远高于R通道值，使用B通道减去R通道再二值化，能提取出蓝色灯条区域，反之亦然。  
 此外，我们还对颜色提取二值图进行一次掩膜大小3*3，形状MORPH_ELLIPSE的膨胀操作，用于图像降噪及灯条区域的闭合。  
-【图片】
+![图5.1 颜色提取二值图]("https://gitee.com/mountain123/JLURoboVision/raw/master/Assets/src_binary.jpg" "预处理后二值图")  
 #### 灯条检测  
 灯条检测主要是先对预处理后的二值图找轮廓（findContours），  
 然后对初筛（面积）后的轮廓进行拟合椭圆（fitEllipse），  
 使用得到的旋转矩形（RotatedRect）构造灯条实例（LightBar），  
 在筛除偏移角过大的灯条后依据灯条中心从左往右排序。  
-【图片】  
+![图5.2 灯条识别图]("https://gitee.com/mountain123/JLURoboVision/raw/master/Assets/Light_Monitor.jpg" "灯条识别效果识别图")   
 #### 装甲板匹配  
 分析装甲板特征可知，装甲板由两个长度相等互相平行的侧面灯条构成，  
 因此我们对检测到的灯条进行两两匹配，  
@@ -92,7 +91,7 @@
 【图片】
 对上述各项装甲板信息（顶点中心点坐标与枪口锚点距离、面积大小、装甲板数字及其是否与操作手设定匹配）进行加权求和，  
 从而获取最佳打击装甲板作为最终的目标装甲板。  
-【图片】
+![图5.4 装甲板识别效果图]("https://gitee.com/mountain123/JLURoboVision/raw/master/Assets/Armor_Monitor.jpg" "装甲板识别效果图")  
 
 ---
 ### 大风车识别
