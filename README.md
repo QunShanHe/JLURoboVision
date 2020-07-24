@@ -98,13 +98,13 @@ JLURoboVision/
 然而，前两种方法由于需要遍历所有像素点，耗时较长，因此我们选择了**通道相减法**进行颜色提取。  
 其原理是在**低曝光**（3000~5000）情况下，蓝色灯条区域的B通道值要远高于R通道值，使用B通道减去R通道再二值化，能提取出蓝色灯条区域，反之亦然。  
 此外，我们还对颜色提取二值图进行一次掩膜大小3*3，形状MORPH_ELLIPSE的膨胀操作，用于图像降噪及灯条区域的闭合。  
-【图片】
+![图5.1 颜色提取二值图](https://gitee.com/mountain123/JLURoboVision/raw/master/Assets/src_binary.jpg "预处理后二值图")  
 2. 灯条检测  
 灯条检测主要是先对预处理后的二值图找轮廓（findContours），  
 然后对初筛（面积）后的轮廓进行拟合椭圆（fitEllipse），  
 使用得到的旋转矩形（RotatedRect）构造灯条实例（LightBar），  
 在筛除偏移角过大的灯条后依据灯条中心从左往右排序。  
-【图片】  
+![图5.2 灯条识别图](https://gitee.com/mountain123/JLURoboVision/raw/master/Assets/Light_Monitor.jpg "灯条识别效果识别图")   
 3. 装甲板匹配  
 分析装甲板特征可知，装甲板由两个长度相等互相平行的侧面灯条构成，  
 因此我们对检测到的灯条进行两两匹配，  
@@ -112,31 +112,50 @@ JLURoboVision/
 从而分辨该装甲板是否为合适的装甲板（isSuitableArmor），  
 然后将所有判断为合适的装甲板放入预选装甲板数组向量中。  
 同时，为了消除“游离灯条”导致的误装甲板，我们针对此种情况编写了eraseErrorRepeatArmor函数，专门用于检测并删除错误装甲板。  
-【图片】
+```
+/**
+ *@brief: detect and delete error armor which is caused by the single lightBar 针对游离灯条导致的错误装甲板进行检测和删除
+ */
+void eraseErrorRepeatArmor(vector<ArmorBox> & armors)
+{
+	int length = armors.size();
+	vector<ArmorBox>::iterator it = armors.begin();
+	for (size_t i = 0; i < length; i++)
+		for (size_t j = i + 1; j < length; j++)
+		{
+			if (armors[i].l_index == armors[j].l_index ||
+				armors[i].l_index == armors[j].r_index ||
+				armors[i].r_index == armors[j].l_index ||
+				armors[i].r_index == armors[j].r_index)
+			{
+				armors[i].getDeviationAngle() > armors[j].getDeviationAngle() ? armors.erase(it + i) : armors.erase(it + j);
+			}
+		}
+}
+```
 4. 匹配好装甲板后，利用装甲板的顶点在原图的二值图（原图的灰度二值图）中剪切装甲板图，  
 使用透射变换将装甲板图变换为SVM模型所需的Size，随后投入SVM识别装甲板数字。  
-【图片】
+![图5.3 装甲板数字识别图](https://gitee.com/mountain123/JLURoboVision/raw/master/Assets/NumClassifier.png "装甲板数字识别效果图")
 5. 对上述各项装甲板信息（顶点中心点坐标与枪口锚点距离、面积大小、装甲板数字及其是否与操作手设定匹配）进行加权求和，  
 从而获取最佳打击装甲板作为最终的目标装甲板。  
-【图片】
+![图5.4 装甲板识别效果图](https://gitee.com/mountain123/JLURoboVision/raw/master/Assets/Armor_Monitor.jpg "装甲板识别效果图")  
 
 ---
 ### 大风车识别
 
 ### 角度解算  
 角度解算部分使用了两种模型解算枪管直指向目标装甲板所需旋转的yaw和pitch角。  
-第一个是P4P解算，第二个是PinHole解算。  
+第一个是**P4P解算**，第二个是**PinHole解算**。  
 首先回顾一下相机成像原理，其成像原理公式如下：  
-$$ s \begin{bmatrix} u \\ v \\ 1 \end{bmatrix} = \begin{bmatrix} f_x & 0 & c_x \\ 0 & f_y & c_y \\ 0 & 0 & 1 \end{bmatrix} \begin{bmatrix} r_{11} & r_{12} & r_{13} & t_x \\ r_{21} & r_{22} & r_{23} & t_y \\ r_{31} & r_{32} & r_{33} & t_z \end{bmatrix} \begin{bmatrix} X \\ Y \\ Z \\ 1 \end{bmatrix}$$
-
-#### P4P解算原理  
+$$ s \begin{bmatrix} u \\ v \\ 1 \end{bmatrix} = \begin{bmatrix} f_x & 0 & c_x \\ 0 & f_y & c_y \\ 0 & 0 & 1 \end{bmatrix} \begin{bmatrix} r_{11} & r_{12} & r_{13} & t_x \\ r_{21} & r_{22} & r_{23} & t_y \\ r_{31} & r_{32} & r_{33} & t_z \end{bmatrix} \begin{bmatrix} X \\ Y \\ Z \\ 1 \end{bmatrix}$$  
+1. P4P解算原理  
 由上述相机成像原理可得相机-物点的平移矩阵为：
 $$ tVec = \begin{bmatrix} t_x \\ t_y \\ t_z \end{bmatrix} $$  
 转角计算公式如下：  
 $$ \tan pitch = \frac{t_y}{\sqrt{{t_y}^2 + {t_z}^2}} $$ 
 $$ \tan yaw = \frac{t_x}{t_z} $$
 
-#### 小孔成像原理
+2. 小孔成像原理
 像素点与物理世界坐标系的关系：  
 $$ x_{screen} = f_x(\frac{X}{Z}) + c_x $$
 $$ y_{screen} = f_y(\frac{Y}{Z}) + c_y $$  
@@ -149,33 +168,23 @@ $$ \tan yaw = \frac{Y}{Z} = \frac{y_{screen} - c_y}{f_y} $$
 
 ---
 ## 7.配置与调试
+### 运行平台搭建  
+1. Qt（及QtCreator）安装
+2. OpenCV库安装及配置
+3. 大恒相机驱动安装及配置
 
+### 代码调试
+1. 使用QtCreator打开JLURoboVision.pro
+2. 检查camera_params.xml 及123svm.xml路径
+3. 编译运行
+
+### 单独模块调试  
+可参考下列示例代码：  
+[JLUVision_Demos](https://gitee.com/mountain123/JLUVision_Demos)各示例程序代码库  
+[Armor_Demo](https://gitee.com/mountain123/JLUVision_Demos/tree/master/Armor_Demo)为装甲板识别模块演示程序，可在Linux(.pro)/Windows(.sln)运行。  
+[AngleSolver_Armor_GxCamera](https://gitee.com/mountain123/JLUVision_Demos/tree/master/Anglesolver_Armor_GxCamera_Demo)为大恒相机采图+装甲板+角度解算演示程序，需要连接大恒相机在Linux下运行。  
 ---
 ## 8.总结展望
-
-
-#### 软件架构
-软件架构说明
-
-
-#### 安装教程
-
-1.  xxxx
-2.  xxxx
-3.  xxxx
-
-#### 使用说明
-
-1.  xxxx
-2.  xxxx
-3.  xxxx
-
-#### 参与贡献
-
-1.  Fork 本仓库
-2.  新建 Feat_xxx 分支
-3.  提交代码
-4.  新建 Pull Request
 
 
 #### 码云特技
