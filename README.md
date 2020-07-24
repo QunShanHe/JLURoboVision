@@ -57,9 +57,6 @@
 |DRIVE|Galaxy SDK|
 ---
 ## 4.整体框架
-### 整体算法流程图  
-![图4.1 自瞄算法流程图]("https://gitee.com/mountain123/JLURoboVision/blob/master/Assets/Armor.png" "自瞄流程图")  
-![图4.1 自瞄算法流程图](https://gitee.com/mountain123/JLURoboVision/raw/master/Assets/Armor.png "自瞄流程图")
 ### 文件树  
 ```
 JLURoboVision/
@@ -89,6 +86,8 @@ JLURoboVision/
 ├── 123svm.xml（SVM模型文件）
 ├── camera_params.xml（相机参数文件）
 ```
+### 整体算法流程图  
+![图4.1 自瞄算法流程图](https://gitee.com/mountain123/JLURoboVision/raw/master/Assets/Armor.png "自瞄流程图")
 ---
 ## 5.实现方案  
 ### 装甲板识别  
