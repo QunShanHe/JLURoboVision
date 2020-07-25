@@ -39,6 +39,7 @@
 此外还引入了相机-枪口的Y轴距离补偿及重力补偿。  
 使用标定板测试，角度解算计算的距离误差在10%以内，角度基本与实际吻合。  
 ![图2.5 角度解算演示](https://gitee.com/mountain123/JLURoboVision/raw/master/Assets/pos.jpg "角度解算测试图")  
+![图2.6 角度解算实时演示](https://gitee.com/mountain123/JLURoboVision/raw/master/Assets/angle_solver.gif "角度解算实时测试")
  
 ---
 ## 3.依赖环境
