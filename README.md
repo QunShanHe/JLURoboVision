@@ -202,7 +202,13 @@ $$ \tan yaw = \frac{Y}{Z} = \frac{y_{screen} - c_y}{f_y} $$
 
 ---
 ## 8.总结展望
-
+### zongjie
+1. this code realize the most function of 
+2. we have these features
+3. equiped with many debugging tools
+4. accelerate image processing
+5. Armor score with operator setting target number
+6. shibie lv  zhenlv budi
 
 #### 码云特技
 
