@@ -27,15 +27,15 @@
 ### 装甲板识别
 装甲板识别采用基于OpenCV的传统算法实现装甲板位置检测，同时采用SVM实现装甲板数字识别。  
 考虑战场实际情况，机器人可打击有效范围在1m~7m之间，在此范围内，本套算法**装甲板识别率达98%**，识别得到装甲板在图像中四个顶点、中心点的坐标信息。  
-![图2.1 装甲板实时识别](https://gitee.com/mountain123/JLURoboVision/raw/master/Assets/RealtimeArmor.gif "装甲板实时识别")   
-在640*480图像分辨率下，**装甲板识别帧率可达340fps左右，引入ROI之后可达420fps**。但考虑到识别帧率对于电控机械延迟的饱和，取消引入ROI操作，以此避免引入ROI之后无法及时探测全局视野情况的问题，加快机器人自瞄响应。  
-**640*480**  
+![图2.1 装甲板实时识别](https://gitee.com/mountain123/JLURoboVision/raw/master/Assets/armorResult.png "装甲板识别效果")   
+在640\*480图像分辨率下，**装甲板识别帧率可达340fps左右，引入ROI之后可达420fps**。但考虑到识别帧率对于电控机械延迟的饱和，取消引入ROI操作，以此避免引入ROI之后无法及时探测全局视野情况的问题，加快机器人自瞄响应。  
+**640\*480（峰值可达340FPS）**  
 ![图2.2 装甲板实时识别帧率](https://gitee.com/mountain123/JLURoboVision/raw/master/Assets/armor640480.gif "装甲板实时识别")  
-**320*240**  
-![图2.2 装甲板实时识别帧率](https://gitee.com/mountain123/JLURoboVision/raw/master/Assets/armor320240.gif "装甲板实时识别") 
+**320\*240（峰值可达1400FPS）**  
+![图2.2 装甲板实时识别帧率](https://gitee.com/mountain123/JLURoboVision/raw/master/Assets/armor320240.gif "装甲板实时识别")  
 装甲板数字识别采用SVM，通过装甲板位置信息裁剪二值化后的装甲板图像并透射变换，投入训练好的SVM模型中识别，**数字识别准确率可达98%**。  
 ![图2.3 装甲板数字识别](https://gitee.com/mountain123/JLURoboVision/raw/master/Assets/RealtimeArmor.gif "装甲板数字实时识别")  
-### 大风车能量机关识别
+### 大风车能量机关识别  
 ![图2.4 大风车识别演示](https://gitee.com/mountain123/JLURoboVision/raw/master/Assets/windmill.gif "大风车识别演示")  
 ### 角度解算  
 角度解算方面使用了两种解算方法分距离挡位运行。第一档使用P4P算法，第二档使用小孔成像原理的PinHole算法。  
@@ -147,8 +147,12 @@ void eraseErrorRepeatArmor(vector<ArmorBox> & armors)
 ![图5.4 装甲板识别效果图](https://gitee.com/mountain123/JLURoboVision/raw/master/Assets/Armor_Monitor.png "装甲板识别效果图")  
 
 ---
-### 大风车识别
-
+### 大风车识别  
+首先对图像进行二值化操作，然后进行一定腐蚀和膨胀，通过边缘提取和条件限制得出待击打叶片（锤子形）。  
+在待击打叶片范围内进一步用类似方法寻找目标装甲板和流动条，在二者连线上寻找中心的“R”。  
+根据目标装甲板坐标和中心坐标计算极坐标系下的目标角度，进而预测待击打点的坐标（小符为装甲板本身，大符需要旋转）。  
+最后将待击打点坐标和图像中心的差值转换为yaw和pitch轴角度，增加一环PID后发送给云台主控板。  
+![图2.4 大风车识别](https://gitee.com/mountain123/JLURoboVision/raw/master/Assets/windmill.png "大风车识别")  
 ### 角度解算  
 角度解算部分使用了两种模型解算枪管直指向目标装甲板所需旋转的yaw和pitch角。  
 第一个是**P4P解算**，第二个是**PinHole解算**。  
@@ -203,6 +207,36 @@ $$ \tan yaw = \frac{Y}{Z} = \frac{y_{screen} - c_y}{f_y} $$
 [JLUVision_Demos](https://gitee.com/mountain123/JLUVision_Demos)各示例程序代码库  
 [Armor_Demo](https://gitee.com/mountain123/JLUVision_Demos/tree/master/Armor_Demo)为装甲板识别模块演示程序，可在Linux(.pro)/Windows(.sln)运行。  
 [AngleSolver_Armor_GxCamera](https://gitee.com/mountain123/JLUVision_Demos/tree/master/Anglesolver_Armor_GxCamera_Demo)为大恒相机采图+装甲板+角度解算演示程序，需要连接大恒相机在Linux下运行。  
+
+### Debugging Tools  
+代码还自定义了一套调试用的函数，将灯条、装甲板识别、角度解算等信息进行可视化输出，并可通过键盘控制部分识别参数，为代码的调试和优化带来便利。  
+```
+//装甲板检测识别调试参数是否输出
+//param:
+//		1.showSrcImg_ON,		  是否展示原图
+//		2.bool showSrcBinary_ON,  是否展示二值图
+//		3.bool showLights_ON,	  是否展示灯条图
+//		4.bool showArmors_ON,	  是否展示装甲板图
+//		5.bool textLights_ON,	  是否输出灯条信息
+//		6.bool textArmors_ON,	  是否输出装甲板信息
+//		7.bool textScores_ON	  是否输出打击度信息
+//					   1  2  3  4  5  6  7
+detector.showDebugInfo(0, 0, 0, 1, 0, 0, 0);
+```
+
+```
+//角度解算调试参数是否输出
+//param:
+//		1.showCurrentResult,	  是否展示当前解算结果
+//		2.bool showTVec,          是否展示目标坐标
+//		3.bool showP4P,           是否展示P4P算法计算结果
+//		4.bool showPinHole,       是否展示PinHole算法计算结果
+//		5.bool showCompensation,  是否输出补偿结果
+//		6.bool showCameraParams	  是否输出相机参数
+//					      1  2  3  4  5  6
+angleSolver.showDebugInfo(1, 1, 1, 1, 1, 0);
+```
+
 
 ---
 ## 8.总结展望
