@@ -1,5 +1,10 @@
 # 吉林大学TARS-GO战队视觉代码JLURoboVision
 ---
+
+## 致谢  
+首先在开头感谢东南大学2018年开源代码以及深圳大学、上海交大开源代码对本套代码的完成提供的巨大帮助，希望这套代码也能够帮助其他队伍在 RM 这个舞台上得到更大的提升。
+
+---
 ## 介绍  
 本代码是吉林大学TARS-GO战队Robomaster2020赛季步兵视觉算法，主要模块分为**装甲板识别**、**大风车能量机关识别**、**角度解算**、**相机驱动**及**串口/CAN通信**。  
 
@@ -236,17 +241,77 @@ detector.showDebugInfo(0, 0, 0, 1, 0, 0, 0);
 //					      1  2  3  4  5  6
 angleSolver.showDebugInfo(1, 1, 1, 1, 1, 0);
 ```
-
-
 ---
 ## 8.总结展望
-### zongjie
-1. this code realize the most function of 
-2. we have these features
-3. equiped with many debugging tools
-4. accelerate image processing
-5. Armor score with operator setting target number
-6. shibie lv  zhenlv budi
+### 总结  
+本套代码主要实现了装甲板识别及大风车的识别这两个模块，结合角度解算模块对识别到的目标信息的解算，获取云台枪口控制转角，随后通过串口传输给下位机。  
+装甲板识别与大风车识别模块性能表现不错，识别率和帧率满足比赛需求；角度解算模块经过设计，提升了准确性及鲁棒性。    
+同时，代码整体经过封装，具有较强的可移植性。  
+### 特色功能  
+1. 丰富的调试接口及数据可视化  
+代码配备了多个调试用函数，能将代码运行效果及计算参数通过图片或终端实时显示，便于代码调试优化。  
+2. 深入底层的图像处理  
+在预处理阶段，选用了通道相减进行颜色提取，然而通道相减法需要调用split及thresh等函数，耗时较长，于是我们经过分析算法特点，我们直接通过指针来遍历图像数据，大大加快了该步的运算速度。  
+```
+//pointer visits all the data of srcImg, the same to bgr channel split 通道相减法的自定义形式，利用指针访问，免去了split、substract和thresh操作，加速了1.7倍
+//data of Mat  bgr bgr bgr bgr
+uchar *pdata = (uchar*)srcImg.data;
+uchar *qdata = (uchar*)srcImg_binary.data;
+int srcData = srcImg.rows * srcImg.cols;
+if (enemyColor == RED)
+{
+	for (int i = 0; i < srcData; i++)
+	{
+		if (*(pdata + 2) - *pdata > armorParam.color_threshold)
+			*qdata = 255;
+		pdata += 3;
+		qdata++;
+	}
+}
+else if (enemyColor == BLUE)
+{
+	for (int i = 0; i < srcData; i++)
+	{
+		if (*pdata - *(pdata+2) > armorParam.color_threshold)
+			*qdata = 255;
+		pdata += 3;
+		qdata++;
+	}
+}
+```
+3. 目标装甲板加权计分选取  
+目标装甲板的选取，我们结合了操作手指定兵种及装甲板实际打击特征（距离枪口的平移向量、打击面积大小）进行加权求和，最终选取打击度得分最大的作为目标装甲板。  
+```
+/**
+ *@brief: compare a_armor to b_armor according to their distance to lastArmor(if exit, not a default armor) and their area and armorNum
+ *		  比较a_armor装甲板与b_armor装甲板的打击度，判断a_armor是否比b_armor更适合打击（通过装甲板数字是否与目标装甲板数字匹配，装甲板与lastArmor的距离以及装甲板的面积大小判断）
+ */
+bool armorCompare(const ArmorBox & a_armor, const ArmorBox & b_armor, const ArmorBox & lastArmor, const int & targetNum)
+{
+	float a_score = 0;  // shooting value of a_armor a_armor的打击度
+	float b_score = 0;  //shooting value of b_armor b_armor的打击度
+	a_score += a_armor.armorRect.area(); //area value of a a_armor面积得分
+	b_score += b_armor.armorRect.area(); //area value of b b_armor面积得分
+
+	//number(robot type) priorty 设置a、b装甲板的分数
+	setNumScore(a_armor.armorNum, targetNum, a_score);
+	setNumScore(b_armor.armorNum, targetNum, b_score);
+	
+	if (lastArmor.armorNum != 0) {  //if lastArmor.armorRect is not a default armor means there is a true targetArmor in the last frame 上一帧图像中存在目标装甲板
+		float a_distance = getPointsDistance(a_armor.center, lastArmor.center); //distance score to the lastArmor(if exist) 装甲板距离得分，算负分
+		float b_distance = getPointsDistance(b_armor.center, lastArmor.center); //distance score to the lastArmor(if exist) 装甲板距离得分，算负分
+		a_score -= a_distance * 2;
+		b_score -= b_distance * 2;
+	}
+	return a_score > b_score; //judge whether a is more valuable according their score 根据打击度判断a是否比b更适合打击
+}
+```  
+4. 角度解算具有两个计算模型分档运行  
+
+### 展望  
+1. 卡尔曼滤波预测
+2. 深度学习识别
+3. 计算平台性能提升
 
 #### 码云特技
 
