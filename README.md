@@ -176,13 +176,12 @@ $$ \tan yaw = \frac{Y}{Z} = \frac{y_{screen} - c_y}{f_y} $$
 |Pitch_data|Pitch_data|Dist_data|Dist_data|Dist_data|Dist_data|Targt)Num|Fire_cmd|
 > * 0xAA -帧头 
 > * Yaw_data : 8 bit char - 接收视觉解算出来的云台 yaw 值
-> * Pitch_data : 8 bit char- 接收视觉解算出来的云台 pitch 值
+> * Pitch_data : 8 bit char - 接收视觉解算出来的云台 pitch 值
 > * （改为传360坐标系，x10保留一位小数，距离直接传数值，同样x10精度mm，帧头0XAA）
-> * Dist_data : 8 bit char- 接收视觉解算目标到相机的距离值
-> * Target_num : 8 bit char -优先目标数字-前三位（数字0-8，没有6）（stm32 -> PC）
-模式选择-后五位（0 不处理，1-8留作模式选择， stm32 -> PC，1为自瞄，2为大风车）
-
-> * Fire-cmd是否开火：8 bit char 在视觉判定枪口（摄像头）对准目标在误差范围内时发送——0 为不开火，1 为开火
+> * Dist_data : 8 bit char - 接收视觉解算目标到相机的距离值
+> * Target_num : 8 bit char - 优先目标数字-前三位（数字0-8，没有6）（stm32 -> PC）
+> * 模式选择 - 后五位（0 不处理，1-8留作模式选择， stm32 -> PC，1为自瞄，2为大风车）
+> * Fire-cmd是否开火：8 bit char - 在视觉判定枪口（摄像头）对准目标在误差范围内时发送——0 为不开火，1 为开火
 ---
 ## 7.配置与调试
 ### 运行平台搭建  
