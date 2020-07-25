@@ -166,8 +166,23 @@ $$ \tan pitch = \frac{X}{Z} = \frac{x_{screen} - c_x}{f_x} $$
 $$ \tan yaw = \frac{Y}{Z} = \frac{y_{screen} - c_y}{f_y} $$
 
 ---
-## 6.通讯协议
+## 6.通讯协议  
+上下板之间的通信逻辑，主要由我们自定的通信协议体现：  
+协议共有16个字节，包括帧头占用的1字节，校验位需要的1字节，数据位的12个字节，以及两个字节的标志位。可以满足上位机与主控板之间的通信需求，且尽量精简了数据包体量以提高传输速度。  
+|Byte0|Byte1|Byte2|Byte3|Byte4|Byte5|Byte6|Byte7|
+|:--|:--|:--|:--|:--|:--|:--|:--|
+|0xAA|CRC_8|Yaw_data|Yaw_data|Yaw_data|Yaw_data|Pitch_data|Pitch_data|
+|Byte8|Byte9|Byte10|Byte11|Byte12|Byte13|Byte14|Byte15|
+|Pitch_data|Pitch_data|Dist_data|Dist_data|Dist_data|Dist_data|Targt)Num|Fire_cmd|
+> * 0xAA -帧头 
+> * Yaw_data : 8 bit char - 接收视觉解算出来的云台 yaw 值
+> * Pitch_data : 8 bit char- 接收视觉解算出来的云台 pitch 值
+> * （改为传360坐标系，x10保留一位小数，距离直接传数值，同样x10精度mm，帧头0XAA）
+> * Dist_data : 8 bit char- 接收视觉解算目标到相机的距离值
+> * Target_num : 8 bit char -优先目标数字-前三位（数字0-8，没有6）（stm32 -> PC）
+模式选择-后五位（0 不处理，1-8留作模式选择， stm32 -> PC，1为自瞄，2为大风车）
 
+> * Fire-cmd是否开火：8 bit char 在视觉判定枪口（摄像头）对准目标在误差范围内时发送——0 为不开火，1 为开火
 ---
 ## 7.配置与调试
 ### 运行平台搭建  
