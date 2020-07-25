@@ -38,7 +38,7 @@
 角度解算方面使用了两种解算方法分距离挡位运行。第一档使用P4P算法，第二档使用小孔成像原理的PinHole算法。  
 此外还引入了相机-枪口的Y轴距离补偿及重力补偿。  
 使用标定板测试，角度解算计算的距离误差在10%以内，角度基本与实际吻合。  
-![图2.5 角度解算演示](https://gitee.com/mountain123/JLURoboVision/raw/master/Assets/RealtimeArmor.gif "装甲板数字实时识别")  
+![图2.5 角度解算演示](https://gitee.com/mountain123/JLURoboVision/raw/master/Assets/pos.jpn "角度解算测试图")  
  
 ---
 ## 3.依赖环境
