@@ -84,6 +84,8 @@ JLURoboVision/
 │   └── matchArmors.cpp（装甲板匹配相关函数源文件）
 │   ├── ArmorDetector.cpp（装甲板识别子类源文件）
 ├── General
+│   ├── 123svm.xml（SVM模型文件）
+│   ├── camera_params.xml（相机参数文件）
 │   └── General.h（公有内容声明头文件）
 ├── GxCamera
 │   ├── GxCamera.h（大恒相机类头文件）
@@ -94,9 +96,11 @@ JLURoboVision/
 └── Serial
 │   ├──  Serial.h（串口头文件）
 │   └──Serial.cpp（串口源文件）
-├── main.cpp（main函数，程序主入口源文件）
-├── 123svm.xml（SVM模型文件）
-├── camera_params.xml（相机参数文件）
+├── Main
+│   ├── ArmorDetecting.cpp（装甲板识别线程）
+│   ├── ImageUpdating.cpp（图像更新线程）
+│   └── main.cpp（main函数，程序主入口源文件）
+
 ```
 ### 整体算法流程图  
 ![图4.1 自瞄算法流程图](https://gitee.com/mountain123/JLURoboVision/raw/master/Assets/Armor.png "自瞄流程图")
