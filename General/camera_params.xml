@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<opencv_storage>
+<Y_DISTANCE_BETWEEN_GUN_AND_CAM>0.</Y_DISTANCE_BETWEEN_GUN_AND_CAM>
+<CAMERA_MATRIX_1 type_id="opencv-matrix">
+  <rows>3</rows>
+  <cols>3</cols>
+  <dt>d</dt>
+  <data>
+    2042.18552784945 0. 402.875998724284 0.
+    1978.85998346700 177.309136726488 0. 0. 1.</data></CAMERA_MATRIX_1>
+<CAMERA_MATRIX_2 type_id="opencv-matrix">
+  <rows>3</rows>
+  <cols>3</cols>
+  <dt>d</dt>
+  <data>
+    1.0382847225196090e+03 0. 9.3531703201491598e+02 0.
+    1.0362297674685799e+03 5.2381184997923003e+02 0. 0. 1.</data></CAMERA_MATRIX_2>
+<DISTORTION_COEFF_1 type_id="opencv-matrix">
+  <rows>4</rows>
+  <cols>1</cols>
+  <dt>d</dt>
+  <data>
+    0.277292580328488 -3.46003150520478
+    -0.0127931599470676 0.0151175746264883</data></DISTORTION_COEFF_1>
+</opencv_storage>
