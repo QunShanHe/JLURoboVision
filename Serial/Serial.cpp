@@ -30,12 +30,22 @@ int Serial(int yaw,int pitch,bool fire,bool find)
         {
             perror("Can't Open Serial Port");
             return (0);
+<<<<<<< HEAD
         }else
+=======
+        }
+     else
+>>>>>>> 9fc347004c00852b72da65e87eba67f5339303aa
      {
          flag=1;//Seral open permit to trans
      }
 
+<<<<<<< HEAD
     }else
+=======
+    }
+    else
+>>>>>>> 9fc347004c00852b72da65e87eba67f5339303aa
     {
         printf("No Armor,Close the Serial\n");
         return 0;
@@ -43,14 +53,24 @@ int Serial(int yaw,int pitch,bool fire,bool find)
 
      //fd=open("dev/ttyS1", O_RDWR);
     //printf("fd= \n",fd);
+<<<<<<< HEAD
      do
     {
+=======
+     do{
+>>>>>>> 9fc347004c00852b72da65e87eba67f5339303aa
         err = UART0_Init(fd,115200,0,8,1,'N');
         //printf("Set Port Exactly!\n");
         usleep(100);
     }while(FALSE == err || FALSE == fd);
+<<<<<<< HEAD
     while(1)
   {
+=======
+
+    while(1)
+    {
+>>>>>>> 9fc347004c00852b72da65e87eba67f5339303aa
 
     //位处理
         char rcv[8]={'0','0','0','0','0','0','0','0'};

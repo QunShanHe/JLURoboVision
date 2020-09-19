@@ -1,9 +1,12 @@
+<<<<<<< HEAD
 /*
 *	@Author: PingLin Zhang
 *	@Date:	 2020.04.13
 *	@Brief:  Serial
 */
 
+=======
+>>>>>>> 9fc347004c00852b72da65e87eba67f5339303aa
 #ifndef  _USART_H
 #define  _USART_H
  

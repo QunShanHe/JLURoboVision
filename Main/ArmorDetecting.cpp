@@ -1,5 +1,10 @@
 #include"General/General.h"
 #include"Armor/Armor.h"
+<<<<<<< HEAD:Main/ArmorDetecting.cpp
+=======
+#include"Serial/Serial.h"
+#include"GxCamera/GxCamera.h"
+>>>>>>> 9fc347004c00852b72da65e87eba67f5339303aa:main.cpp
 #include"AngleSolver/AngleSolver.h"
 #include"Serial/Serial.h"
 #include<unistd.h>
@@ -18,12 +23,26 @@ double fps;
 void* armorDetectingThread(void* PARAM)
 {
     //Set armor detector prop
+<<<<<<< HEAD:Main/ArmorDetecting.cpp
     detector.loadSVM("/home/mountain/Git/JLURoboVision/General/123svm.xml");
 
     //Set angle solver prop
     angleSolver.setCameraParam("/home/mountain/Git/JLURoboVision/General/camera_params.xml", 1);
     angleSolver.setArmorSize(SMALL_ARMOR,135,125);
     angleSolver.setArmorSize(BIG_ARMOR,230,127);
+=======
+    //detector.loadSVM("/home/mountain/Git/JLURoboVision/123svm.xml");
+    detector.loadSVM("/home/robo-jlu/Git/JLURoboVision/123svm.xml");
+    detector.setEnemyColor(BLUE); //here set enemy color
+
+    //Set angle solver prop
+    //angleSolver.setCameraParam("/home/mountain/Git/JLURoboVision/camera_params.xml", 1);
+    angleSolver.setCameraParam("/home/robo-jlu/Git/JLURoboVision/camera_params.xml", 1);
+    //angleSolver.setArmorSize(SMALL_ARMOR,700,800);
+    //angleSolver.setArmorSize(BIG_ARMOR,700,800);
+    angleSolver.setArmorSize(SMALL_ARMOR,43,40);
+    angleSolver.setArmorSize(BIG_ARMOR,43,40);
+>>>>>>> 9fc347004c00852b72da65e87eba67f5339303aa:main.cpp
     angleSolver.setBulletSpeed(15000);
     usleep(1000000);
 
@@ -67,11 +86,15 @@ void* armorDetectingThread(void* PARAM)
 
         //FPS
         t1=(getTickCount()-t)/getTickFrequency();
+<<<<<<< HEAD:Main/ArmorDetecting.cpp
         printf("Armor Detecting FPS: %f\n",1/t1);
         if(detector.isFoundArmor()){
             printf("Found Target! Center(%d,%d)\n",centerPoint.x,centerPoint.y);
             cout<<"Yaw: "<<yaw<<"Pitch: "<<pitch<<"Distance: "<<distance<<endl;
         }
+=======
+        //printf("***********************FPS:%f\n",1/t1);
+>>>>>>> 9fc347004c00852b72da65e87eba67f5339303aa:main.cpp
 
 #ifdef DEBUG_MODE
         //********************** DEGUG **********************//
@@ -98,7 +121,11 @@ void* armorDetectingThread(void* PARAM)
             //		5.bool showCompensation,  是否输出补偿结果
             //		6.bool showCameraParams	  是否输出相机参数
             //					      1  2  3  4  5  6
+<<<<<<< HEAD:Main/ArmorDetecting.cpp
             angleSolver.showDebugInfo(1, 0, 0, 0, 0, 0);
+=======
+            angleSolver.showDebugInfo(0, 0, 0, 0, 0, 0);
+>>>>>>> 9fc347004c00852b72da65e87eba67f5339303aa:main.cpp
         }
 
         char chKey = waitKey(1);
