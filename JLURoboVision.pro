@@ -45,13 +45,6 @@ SOURCES += \
         Main/main.cpp \
         Serial/Serial.cpp
 
-SUBDIRS += \
-    Armor/ARMOR.pro
-
-DISTFILES += \
-    123svm.xml \
-    camera_params.xml
-
 HEADERS += \
     AngleSolver/AngleSolver.h \
     Armor/Armor.h \
@@ -60,3 +53,7 @@ HEADERS += \
     GxCamera/GxCamera.h \
     General/General.h \
     Serial/Serial.h
+
+DISTFILES += \
+    123svm.xml \
+    camera_params.xml
