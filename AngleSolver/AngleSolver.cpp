@@ -188,8 +188,14 @@ void AngleSolver::showDebugInfo(bool showCurrentResult, bool showTVec, bool show
 {
     if(showCurrentResult)
     {
-        cout<<"Yaw: " << y_yaw << "Pitch: " << x_pitch << "Distance: " << distance<<endl;
-        cout << "-----------------------------------------------" << endl;
+        Mat angleImage = Mat::zeros(250,600,CV_8UC3);
+        putText(angleImage, "Yaw: " + to_string(y_yaw), Point(100, 50), FONT_HERSHEY_SIMPLEX, 1, Scalar(255, 0, 255), 1, 8, false);
+        putText(angleImage, "Pitch: " + to_string(x_pitch), Point(100, 100), FONT_HERSHEY_SIMPLEX, 1, Scalar(255, 0, 255), 1, 8, false);
+        putText(angleImage, "Distance: " + to_string(distance), Point(100, 150), FONT_HERSHEY_SIMPLEX, 1, Scalar(255, 0, 255), 1, 8, false);
+        putText(angleImage, "X:" + to_string((int)(tVec.at<double>(0))), Point(50, 200), FONT_HERSHEY_SIMPLEX, 1, Scalar(255, 0, 255), 1, 8, false);
+        putText(angleImage, "Y:" + to_string((int)(tVec.at<double>(1))), Point(250, 200), FONT_HERSHEY_SIMPLEX, 1, Scalar(255, 0, 255), 1, 8, false);
+        putText(angleImage, "Z:" + to_string((int)(tVec.at<double>(2))), Point(400, 200), FONT_HERSHEY_SIMPLEX, 1, Scalar(255, 0, 255), 1, 8, false);
+        imshow("AngleSolver",angleImage);
     }
     if(showTVec)
     {

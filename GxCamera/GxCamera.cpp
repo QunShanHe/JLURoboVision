@@ -11,6 +11,11 @@
 
 #include"GxCamera.h"
 
+extern pthread_mutex_t Globalmutex; // threads conflict due to image-updating
+extern pthread_cond_t GlobalCondCV; // threads conflict due to image-updating
+extern bool imageReadable;          // threads conflict due to image-updating
+//extern cv::Mat src;                     // Transfering buffer
+
 GxCamera::GxCamera()
 {
     g_hDevice = NULL;                     ///< Device handle
@@ -478,10 +483,6 @@ void *ProcGetImage(void* pAcquisitionThread)
 
     while(*(threadParam->g_AcquisitionFlag))
     {
-        //fps
-        double t,t1;
-        t = cv::getTickCount();
-
         // Get a frame from Queue
         emStatus = GXDQBuf(threadParam->m_hDevice, &pFrameBuffer, 1000);
         if(emStatus != GX_STATUS_SUCCESS)
@@ -536,8 +537,8 @@ void *ProcGetImage(void* pAcquisitionThread)
             }
 
             //输出采集到的图像信息
-            printf("<Successful acquisition: FrameCount: %u Width: %d Height: %d FrameID: %llu>\n",
-                    ui32FrameCount++, pFrameBuffer->nWidth, pFrameBuffer->nHeight, pFrameBuffer->nFrameID);
+            //printf("<Successful acquisition: FrameCount: %u Width: %d Height: %d FrameID: %llu>\n",
+            //        ui32FrameCount++, pFrameBuffer->nWidth, pFrameBuffer->nHeight, pFrameBuffer->nFrameID);
 
             emStatus = GXQBuf(threadParam->m_hDevice, pFrameBuffer);
             if(emStatus != GX_STATUS_SUCCESS)
@@ -546,8 +547,6 @@ void *ProcGetImage(void* pAcquisitionThread)
                 break;
             }
        }
-        t1=(cv::getTickCount()-t)/cv::getTickFrequency();
-        printf("fps:%f\n\n",1/t1);
     }
     printf("<Acquisition thread Exit!>\n");
     return 0;

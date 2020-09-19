@@ -40,16 +40,16 @@ SOURCES += \
         Armor/LightBar.cpp \
         Armor/matchArmors.cpp \
         GxCamera/GxCamera.cpp \
-        main.cpp
+        Main/ArmorDetecting.cpp \
+        Main/ImageUpdating.cpp \
+        Main/main.cpp \
+        Serial/Serial.cpp
 
 SUBDIRS += \
     Armor/ARMOR.pro
 
 DISTFILES += \
     123svm.xml \
-    Armor/Armor.sln \
-    Armor/Armor.vcxproj \
-    Armor/Armor.vcxproj.filters \
     camera_params.xml
 
 HEADERS += \
@@ -58,4 +58,5 @@ HEADERS += \
     GxCamera/include/DxImageProc.h \
     GxCamera/include/GxIAPI.h \
     GxCamera/GxCamera.h \
-    General/General.h
+    General/General.h \
+    Serial/Serial.h

@@ -1,3 +1,9 @@
+/*
+*	@Author: Qunshan He,mountain.he@qq.com
+*	@Date:	 2020.06.15
+*	@Brief:  This header file declares all the classes and params used to solve eular angle
+*/
+
 #ifndef ANGLE_SOLVER
 #define ANGLE_SOLVER
 

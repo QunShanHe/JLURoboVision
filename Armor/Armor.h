@@ -1,5 +1,5 @@
 /*
-*	@Author: Mountain
+*	@Author: Qunshan He,mountain.he@qq.com
 *	@Date:	 2020.04.13
 *	@Brief:  This header file declares all the classes and params used to detect/recognize enemy armors
 */

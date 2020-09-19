@@ -4,7 +4,7 @@
 \brief    GxCamera class declare
 
 \date     2020-05-14
-\author   Mountain
+\author   Qunshan He,mountain.he@qq.com
 
 */
 //----------------------------------------------------------------------------------
@@ -24,9 +24,6 @@
 
 void GetErrorString(GX_STATUS emErrorStatus);
 void *ProcGetImage(void* pAcquisitionThread);
-extern pthread_mutex_t Globalmutex;
-extern pthread_cond_t GlobalCondCV;
-extern bool imageReadable;
 
 //Show error message
 #define GX_VERIFY(emStatus) \
