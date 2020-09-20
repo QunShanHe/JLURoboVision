@@ -33,26 +33,51 @@
 装甲板识别采用基于OpenCV的传统算法实现装甲板位置检测，同时采用SVM实现装甲板数字识别。  
 考虑战场实际情况，机器人可打击有效范围在1m~7m之间，在此范围内，本套算法**装甲板识别率达98%**，识别得到装甲板在图像中四个顶点、中心点的坐标信息。  
 **EnemyColor = BLUE; TargetNum = 1**  
-<img src="https://gitee.com/mountain123/JLURoboVision/raw/master/Assets/B1.png" width = "600" alt="图2.1 装甲板识别" align="center" />  
 
-![图2.1 装甲板识别](https://gitee.com/mountain123/JLURoboVision/raw/master/Assets/B1.png "装甲板识别效果")   
-**EnemyColor = RED; TargetNum = 2**
-![图2.2 装甲板识别](https://gitee.com/mountain123/JLURoboVision/raw/master/Assets/R.png "装甲板识别效果")   
+<div align=center>
+<img src="https://gitee.com/mountain123/JLURoboVision/raw/master/Assets/B1.png" width = "600" alt="图2.1 装甲板识别"/>
+</div>  
+
+ 
+**EnemyColor = RED; TargetNum = 2**  
+<div align=center>
+<img src="https://gitee.com/mountain123/JLURoboVision/raw/master/Assets/R.png" width = "600" alt="图2.2 装甲板识别"/>
+</div>  
+
 在640\*480图像分辨率下，**装甲板识别帧率可达340fps左右，引入ROI之后可达420fps**。但考虑到识别帧率对于电控机械延迟的饱和，取消引入ROI操作，以此避免引入ROI之后无法及时探测全局视野情况的问题，加快机器人自瞄响应。  
 **640\*480（峰值可达340FPS）**  
-![图2.2 装甲板实时识别帧率](https://gitee.com/mountain123/JLURoboVision/raw/master/Assets/armor640480.gif "装甲板实时识别")  
+<div align=center>
+<img src="https://gitee.com/mountain123/JLURoboVision/raw/master/Assets/armor640480.gif" width = "600" alt="图2.3 装甲板实时识别帧率"/>
+</div>  
+
+
 **320\*240（峰值可达1400FPS）**  
-![图2.3 装甲板实时识别帧率](https://gitee.com/mountain123/JLURoboVision/raw/master/Assets/armor320240.gif "装甲板实时识别")  
+<div align=center>
+<img src="https://gitee.com/mountain123/JLURoboVision/raw/master/Assets/armor320240.gif" width = "600" alt="图2.4 装甲板实时识别帧率"/>
+</div> 
+
+
 装甲板数字识别采用SVM，通过装甲板位置信息裁剪二值化后的装甲板图像并透射变换，投入训练好的SVM模型中识别，**数字识别准确率可达98%**。  
-![图2.4 装甲板数字识别](https://gitee.com/mountain123/JLURoboVision/raw/master/Assets/RealtimeArmor.gif "装甲板数字实时识别")  
+<div align=center>
+<img src="https://gitee.com/mountain123/JLURoboVision/raw/master/Assets/RealtimeArmor.gif" width = "600" alt="图2.5 装甲板数字识别"/>
+</div> 
+
+ 
 ### 大风车能量机关识别  
-![图2.5 大风车识别演示](https://gitee.com/mountain123/JLURoboVision/raw/master/Assets/windmill.gif "大风车识别演示")  
+<div align=center>
+<img src="https://gitee.com/mountain123/JLURoboVision/raw/master/Assets/windmill.gif" width = "600" alt="图2.6 大风车识别演示"/>
+</div> 
+ 
 ### 角度解算  
 角度解算方面使用了两种解算方法分距离挡位运行。第一档使用P4P算法，第二档使用小孔成像原理的PinHole算法。  
 此外还引入了相机-枪口的Y轴距离补偿及重力补偿。  
 使用标定板测试，角度解算计算的距离误差在10%以内，角度基本与实际吻合。  
-![图2.6 角度解算测试图](https://gitee.com/mountain123/JLURoboVision/raw/master/Assets/pos.jpg "角度解算测试图")  
-![图2.7 角度解算实时测试](https://gitee.com/mountain123/JLURoboVision/raw/master/Assets/angle_solver.gif "角度解算实时测试图")  
+<div align=center>
+<img src="https://gitee.com/mountain123/JLURoboVision/raw/master/Assets/pos.jpg" width = "600" alt="图2.7 角度解算测试图"/>
+</div> 
+<div align=center>
+<img src="https://gitee.com/mountain123/JLURoboVision/raw/master/Assets/angle_solver.gif" width = "600" alt="图2.7 角度解算测试图"/>
+</div> 
  
 ---
 ## 3.依赖环境
@@ -105,7 +130,9 @@ JLURoboVision/
 
 ```
 ### 整体算法流程图  
-![图4.1 自瞄算法流程图](https://gitee.com/mountain123/JLURoboVision/raw/master/Assets/Armor.png "自瞄流程图")
+<div align=center>
+<img src="https://gitee.com/mountain123/JLURoboVision/raw/master/Assets/Armor.png " width = "800" alt="图4.1 自瞄算法流程图"/>
+</div>  
 ---
 ## 5.实现方案  
 ### 装甲板识别  
@@ -116,13 +143,17 @@ JLURoboVision/
 然而，前两种方法由于需要遍历所有像素点，耗时较长，因此我们选择了**通道相减法**进行颜色提取。  
 其原理是在**低曝光**（3000~5000）情况下，蓝色灯条区域的B通道值要远高于R通道值，使用B通道减去R通道再二值化，能提取出蓝色灯条区域，反之亦然。  
 此外，我们还对颜色提取二值图进行一次掩膜大小3*3，形状MORPH_ELLIPSE的膨胀操作，用于图像降噪及灯条区域的闭合。  
-![图5.1 颜色提取二值图](https://gitee.com/mountain123/JLURoboVision/raw/master/Assets/src_binary.jpg "预处理后二值图")  
+<div align=center>
+<img src="https://gitee.com/mountain123/JLURoboVision/raw/master/Assets/src_binary.jpg " width = "600" alt="图5.1 颜色提取二值图"/>
+</div>  
 2. **灯条检测**  
 灯条检测主要是先对预处理后的二值图找轮廓（findContours），  
 然后对初筛（面积）后的轮廓进行拟合椭圆（fitEllipse），  
 使用得到的旋转矩形（RotatedRect）构造灯条实例（LightBar），  
 在筛除偏移角过大的灯条后依据灯条中心从左往右排序。  
-![图5.2 灯条识别图](https://gitee.com/mountain123/JLURoboVision/raw/master/Assets/Light_Monitor.jpg "灯条识别效果识别图")   
+<div align=center>
+<img src="https://gitee.com/mountain123/JLURoboVision/raw/master/Assets/Light_Monitor.jpg " width = "600" alt="图5.2 灯条识别图"/>
+</div>  
 3. **装甲板匹配**  
 分析装甲板特征可知，装甲板由两个长度相等互相平行的侧面灯条构成，  
 因此我们对检测到的灯条进行两两匹配，  
@@ -154,11 +185,15 @@ void eraseErrorRepeatArmor(vector<ArmorBox> & armors)
 4. **装甲板数字识别**  
 匹配好装甲板后，利用装甲板的顶点在原图的二值图（原图的灰度二值图）中剪切装甲板图，  
 使用透射变换将装甲板图变换为SVM模型所需的Size，随后投入SVM识别装甲板数字。  
-![图5.3 装甲板数字识别图](https://gitee.com/mountain123/JLURoboVision/raw/master/Assets/NumClassifier.png "装甲板数字识别效果图")
+<div align=center>
+<img src="https://gitee.com/mountain123/JLURoboVision/raw/master/Assets/NumClassifier.png " width = "600" alt="图5.3 装甲板数字识别图"/>
+</div>  
 5. **目标装甲板选取**  
 对上述各项装甲板信息（顶点中心点坐标与枪口锚点距离、面积大小、装甲板数字及其是否与操作手设定匹配）进行加权求和，  
 从而获取最佳打击装甲板作为最终的目标装甲板。  
-![图5.4 装甲板识别效果图](https://gitee.com/mountain123/JLURoboVision/raw/master/Assets/Armor_Monitor.png "装甲板识别效果图")  
+<div align=center>
+<img src="https://gitee.com/mountain123/JLURoboVision/raw/master/Assets/Armor_Monitor.png " width = "600" alt="图5.4 装甲板识别效果图"/>
+</div>  
 
 ---
 ### 大风车识别  
@@ -166,7 +201,9 @@ void eraseErrorRepeatArmor(vector<ArmorBox> & armors)
 在待击打叶片范围内进一步用类似方法寻找目标装甲板和流动条，在二者连线上寻找中心的“R”。  
 根据目标装甲板坐标和中心坐标计算极坐标系下的目标角度，进而预测待击打点的坐标（小符为装甲板本身，大符需要旋转）。  
 最后将待击打点坐标和图像中心的差值转换为yaw和pitch轴角度，增加一环PID后发送给云台主控板。  
-![图2.4 大风车识别](https://gitee.com/mountain123/JLURoboVision/raw/master/Assets/windmill.png "大风车识别")  
+<div align=center>
+<img src="https://gitee.com/mountain123/JLURoboVision/raw/master/Assets/windmill.png " width = "600" alt="图5.5 大风车识别"/>
+</div>  
 ### 角度解算  
 角度解算部分使用了两种模型解算枪管直指向目标装甲板所需旋转的yaw和pitch角。  
 第一个是**P4P解算**，第二个是**PinHole解算**。  
