@@ -45,7 +45,7 @@
 </div>  
 
 在640\*480图像分辨率下，**装甲板识别帧率可达340fps左右，引入ROI之后可达420fps**。但考虑到识别帧率对于电控机械延迟的饱和，取消引入ROI操作，以此避免引入ROI之后无法及时探测全局视野情况的问题，加快机器人自瞄响应。  
-<center>**640\*480（峰值可达340FPS）**</center>  
+<div align=center>**640\*480（峰值可达340FPS）**</div>  
 <div align=center>
 <img src="https://gitee.com/mountain123/JLURoboVision/raw/master/Assets/armor640480.gif" width = "600" alt="图2.3 装甲板实时识别帧率"/>
 </div>  
@@ -133,6 +133,7 @@ JLURoboVision/
 <div align=center>
 <img src="https://gitee.com/mountain123/JLURoboVision/raw/master/Assets/Armor.png " width = "800" alt="图4.1 自瞄算法流程图"/>
 </div>  
+
 ---
 ## 5.实现方案  
 ### 装甲板识别  
@@ -146,6 +147,7 @@ JLURoboVision/
 <div align=center>
 <img src="https://gitee.com/mountain123/JLURoboVision/raw/master/Assets/src_binary.jpg " width = "600" alt="图5.1 颜色提取二值图"/>
 </div>  
+
 2. **灯条检测**  
 灯条检测主要是先对预处理后的二值图找轮廓（findContours），  
 然后对初筛（面积）后的轮廓进行拟合椭圆（fitEllipse），  
@@ -154,6 +156,7 @@ JLURoboVision/
 <div align=center>
 <img src="https://gitee.com/mountain123/JLURoboVision/raw/master/Assets/Light_Monitor.jpg " width = "600" alt="图5.2 灯条识别图"/>
 </div>  
+
 3. **装甲板匹配**  
 分析装甲板特征可知，装甲板由两个长度相等互相平行的侧面灯条构成，  
 因此我们对检测到的灯条进行两两匹配，  
@@ -161,6 +164,7 @@ JLURoboVision/
 从而分辨该装甲板是否为合适的装甲板（isSuitableArmor），  
 然后将所有判断为合适的装甲板放入预选装甲板数组向量中。  
 同时，为了消除“游离灯条”导致的误装甲板，我们针对此种情况编写了eraseErrorRepeatArmor函数，专门用于检测并删除错误装甲板。  
+
 ```
 /**
  *@brief: detect and delete error armor which is caused by the single lightBar 针对游离灯条导致的错误装甲板进行检测和删除
@@ -188,6 +192,7 @@ void eraseErrorRepeatArmor(vector<ArmorBox> & armors)
 <div align=center>
 <img src="https://gitee.com/mountain123/JLURoboVision/raw/master/Assets/NumClassifier.png " width = "600" alt="图5.3 装甲板数字识别图"/>
 </div>  
+
 5. **目标装甲板选取**  
 对上述各项装甲板信息（顶点中心点坐标与枪口锚点距离、面积大小、装甲板数字及其是否与操作手设定匹配）进行加权求和，  
 从而获取最佳打击装甲板作为最终的目标装甲板。  
@@ -216,7 +221,7 @@ $$ tVec = \begin{bmatrix} t_x \\ t_y \\ t_z \end{bmatrix} $$
 $$ \tan pitch = \frac{t_y}{\sqrt{{t_y}^2 + {t_z}^2}} $$ 
 $$ \tan yaw = \frac{t_x}{t_z} $$
 
-2. 小孔成像原理
+2. 小孔成像原理  
 像素点与物理世界坐标系的关系：  
 $$ x_{screen} = f_x(\frac{X}{Z}) + c_x $$
 $$ y_{screen} = f_y(\frac{Y}{Z}) + c_y $$  
