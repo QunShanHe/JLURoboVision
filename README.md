@@ -47,25 +47,24 @@
 在640\*480图像分辨率下，**装甲板识别帧率可达340fps左右，引入ROI之后可达420fps**。但考虑到识别帧率对于电控机械延迟的饱和，取消引入ROI操作，以此避免引入ROI之后无法及时探测全局视野情况的问题，加快机器人自瞄响应。  
 <div align=center>**640\*480（峰值可达340FPS）**</div>  
 <div align=center>
-<img src="https://gitee.com/mountain123/JLURoboVision/raw/master/Assets/armor640480.gif" width = "600" alt="图2.3 装甲板实时识别帧率"/>
+<img src="github.com/QunShanHe/JLURoboVision/blob/master/Assets/armor640480.gif" width = "600" alt="图2.3 装甲板实时识别帧率"/>
 </div>  
-
 
 <div align=center>**320\*240（峰值可达1400FPS）**</div>  
 <div align=center>
-<img src="https://gitee.com/mountain123/JLURoboVision/raw/master/Assets/armor320240.gif" width = "600" alt="图2.4 装甲板实时识别帧率"/>
+<img src="github.com/QunShanHe/JLURoboVision/blob/master/Assets/armor320240.gif" width = "600" alt="图2.4 装甲板实时识别帧率"/>
 </div> 
 
 
 装甲板数字识别采用SVM，通过装甲板位置信息裁剪二值化后的装甲板图像并透射变换，投入训练好的SVM模型中识别，**数字识别准确率可达98%**。  
 <div align=center>
-<img src="https://gitee.com/mountain123/JLURoboVision/raw/master/Assets/RealtimeArmor.gif" width = "600" alt="图2.5 装甲板数字识别"/>
+<img src="github.com/QunShanHe/JLURoboVision/blob/master/Assets/RealtimeArmor.gif" width = "600" alt="图2.5 装甲板数字识别"/>
 </div> 
 
  
 ### 大风车能量机关识别  
 <div align=center>
-<img src="https://gitee.com/mountain123/JLURoboVision/raw/master/Assets/windmill.gif" width = "600" alt="图2.6 大风车识别演示"/>
+<img src="github.com/QunShanHe/JLURoboVision/blob/master/Assets/windmill.gif" width = "600" alt="图2.6 大风车识别演示"/>
 </div> 
  
 ### 角度解算  
@@ -76,7 +75,7 @@
 <img src="https://gitee.com/mountain123/JLURoboVision/raw/master/Assets/pos.jpg" width = "600" alt="图2.7 角度解算测试图"/>
 </div> 
 <div align=center>
-<img src="https://gitee.com/mountain123/JLURoboVision/raw/master/Assets/angle_solver.gif" width = "600" alt="图2.7 角度解算测试图"/>
+<img src="github.com/QunShanHe/JLURoboVision/blob/master/Assets/angle_solver.gif" width = "600" alt="图2.7 角度解算测试图"/>
 </div> 
  
 ---
