@@ -249,8 +249,8 @@ $$ \tan yaw = \frac{Y}{Z} = \frac{y_{screen} - c_y}{f_y} $$
 3. 大恒相机驱动安装及配置
 
 ### 代码调试
-1. 使用QtCreator打开JLURoboVision.pro
-2. 检查camera_params.xml 及123svm.xml路径
+1. 使用QtCreator打开JLURoboVision.pro（或直接在根目录中make）
+2. 检查并修改camera_params.xml 及123svm.xml路径
 3. 编译运行
 
 ### 单独模块调试  
