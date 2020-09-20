@@ -32,7 +32,9 @@
 ### 装甲板识别
 装甲板识别采用基于OpenCV的传统算法实现装甲板位置检测，同时采用SVM实现装甲板数字识别。  
 考虑战场实际情况，机器人可打击有效范围在1m~7m之间，在此范围内，本套算法**装甲板识别率达98%**，识别得到装甲板在图像中四个顶点、中心点的坐标信息。  
-**EnemyColor = BLUE; TargetNum = 1**
+**EnemyColor = BLUE; TargetNum = 1**  
+<img src="https://gitee.com/mountain123/JLURoboVision/raw/master/Assets/B1.png" width = "600" alt="图2.1 装甲板识别" align="center" />  
+
 ![图2.1 装甲板识别](https://gitee.com/mountain123/JLURoboVision/raw/master/Assets/B1.png "装甲板识别效果")   
 **EnemyColor = RED; TargetNum = 2**
 ![图2.2 装甲板识别](https://gitee.com/mountain123/JLURoboVision/raw/master/Assets/R.png "装甲板识别效果")   
