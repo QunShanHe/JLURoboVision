@@ -208,6 +208,7 @@ void eraseErrorRepeatArmor(vector<ArmorBox> & armors)
 <div align=center>
 <img src="https://github.com/QunShanHe/JLURoboVision/blob/master/Assets/windmill.png " width = "600" alt="图5.5 大风车识别"/>
 </div>  
+
 ### 角度解算  
 角度解算部分使用了两种模型解算枪管直指向目标装甲板所需旋转的yaw和pitch角。  
 第一个是**P4P解算**，第二个是**PinHole解算**。  
