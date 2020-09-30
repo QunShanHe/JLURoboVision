@@ -213,21 +213,28 @@ void eraseErrorRepeatArmor(vector<ArmorBox> & armors)
 角度解算部分使用了两种模型解算枪管直指向目标装甲板所需旋转的yaw和pitch角。  
 第一个是**P4P解算**，第二个是**PinHole解算**。  
 首先回顾一下相机成像原理，其成像原理公式如下：  
-$$ s \begin{bmatrix} u \\ v \\ 1 \end{bmatrix} = \begin{bmatrix} f_x & 0 & c_x \\ 0 & f_y & c_y \\ 0 & 0 & 1 \end{bmatrix} \begin{bmatrix} r_{11} & r_{12} & r_{13} & t_x \\ r_{21} & r_{22} & r_{23} & t_y \\ r_{31} & r_{32} & r_{33} & t_z \end{bmatrix} \begin{bmatrix} X \\ Y \\ Z \\ 1 \end{bmatrix}$$  
+<div align=center>
+<img src="https://github.com/QunShanHe/JLURoboVision/blob/master/Assets/angle1.png" width = "600" alt="图2.7 角度解算测试图"/>
+</div> 
 1. P4P解算原理  
 由上述相机成像原理可得相机-物点的平移矩阵为：
-$$ tVec = \begin{bmatrix} t_x \\ t_y \\ t_z \end{bmatrix} $$  
+<div align=center>
+<img src="https://github.com/QunShanHe/JLURoboVision/blob/master/Assets/angle2.png" width = "600" alt="图2.7 角度解算测试图"/>
+</div> 
 转角计算公式如下：  
-$$ \tan pitch = \frac{t_y}{\sqrt{{t_y}^2 + {t_z}^2}} $$ 
-$$ \tan yaw = \frac{t_x}{t_z} $$
+<div align=center>
+<img src="https://github.com/QunShanHe/JLURoboVision/blob/master/Assets/angle3.png" width = "600" alt="图2.7 角度解算测试图"/>
+</div> 
 
 2. 小孔成像原理  
 像素点与物理世界坐标系的关系：  
-$$ x_{screen} = f_x(\frac{X}{Z}) + c_x $$
-$$ y_{screen} = f_y(\frac{Y}{Z}) + c_y $$  
+<div align=center>
+<img src="https://github.com/QunShanHe/JLURoboVision/blob/master/Assets/angle4.png" width = "600" alt="图2.7 角度解算测试图"/>
+</div> 
 则转角计算公式如下：  
-$$ \tan pitch = \frac{X}{Z} = \frac{x_{screen} - c_x}{f_x} $$
-$$ \tan yaw = \frac{Y}{Z} = \frac{y_{screen} - c_y}{f_y} $$
+<div align=center>
+<img src="https://github.com/QunShanHe/JLURoboVision/blob/master/Assets/angle5.png" width = "600" alt="图2.7 角度解算测试图"/>
+</div> 
 
 ---
 ## 6.通讯协议  
